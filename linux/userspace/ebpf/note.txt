@@ -1,0 +1,12 @@
+Example code that filters only IP packets.
+
+    ldh [12]                    # Load byte at index 12 in the processed packet
+    jeq #ETHERTYPE IP, L1, L2   # Jump to L1 if type is IP, otherwise jump to L2
+    L1: ret #TRUE               # Filter output: true
+    L2: ret #0                  # Filter output: false
+
+BPF stack is limited to 512 bytes:
+
+https://elixir.bootlin.com/linux/v5.19.17/source/include/linux/filter.h#L86
+	/* BPF program can access up to 512 bytes of stack space. */
+	#define MAX_BPF_STACK	512

@@ -1,0 +1,1 @@
+https://lamport.azurewebsites.net/video/consensus-on-transaction-commit.pdf

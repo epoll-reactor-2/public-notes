@@ -1,0 +1,17 @@
+screen -t top_left bash -c 'trap "kill 0" EXIT; sudo ip netns exec h2 python3 -m http.server & sleep 10'
+
+split
+focus
+screen -t bottom_left bash -c 'trap "kill 0" EXIT; curl 10.0.0.10:8000 & sleep 10'
+
+focus top
+split -v
+focus
+screen -t top_right bash -c 'trap "kill 0" EXIT; sudo ip netns exec h3 python3 -m http.server & sleep 10'
+
+focus down
+split -v
+focus
+screen -t bottom_right bash -c 'trap "kill 0" EXIT; sudo cat /sys/kernel/debug/tracing/trace_pipe & sleep 10'
+
+autodetach off

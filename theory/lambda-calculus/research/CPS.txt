@@ -1,0 +1,12 @@
+SSA form is an alternative IR where each variable is assigned exactly once. Every original mutable update is turned into a new binding, and φ-functions merge values coming from different control-flow paths. Notably, SSA’s model of computation is essentially “binding-oriented” like functional languages: variables in SSA are never mutated; each assignment yields a new binding
+wingolog.org
+. In fact, SSA is formally equivalent to a subset of CPS (ignoring exceptional control flow)
+en.wikipedia.org
+. In both CPS and SSA each value has a single definition and uses refer to a particular definition. The difference is that CPS enforces this lexically (via lexical α-renaming), whereas SSA enforces it via dominance in the control-flow graph
+bernsteinbear.com
+. The correspondence is well-known: compilers can convert CPS to SSA or vice-versa for analysis
+bernsteinbear.com
+. For our design, we can choose one IR or convert between them. For example, we might compile source λ-terms to CPS (to simplify control flow), then translate the CPS code into an SSA-like form (inserting φ-nodes where continuations merge) using a transformation like Kelsey’s
+bernsteinbear.com
+ or the provided matrix-based SSA algorithm for placing φ-functions. This hybrid IR would expose both functional (CPS) structure and SSA-like data-flow facts, enabling conventional SSA optimizations (constant propagation, dead code elimination, global value numbering, etc.) on functional code
+bernsteinbear

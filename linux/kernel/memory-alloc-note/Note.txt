@@ -1,0 +1,30 @@
+There are at least 7 kernel techniques to allocate a memory.
+
+
++--------------------------+-----------------------------+---------------------------+------------+---------+--------------+---------+-------------------------------+
+| Allocator                | Virtually Contiguous        | Physically Contiguous     | Kernel Use | DMA Use | Size Range   | Speed   | Notes                         |
++--------------------------+-----------------------------+---------------------------+------------+---------+--------------+---------+-------------------------------+
+| 1. Page Allocator        | No                          | Yes                       | Yes        | Yes     | 1+ pages     | Fast    | Buddy allocator, fragmentation|
+|    alloc_pages()         |                             |                           |            |         |              |         | risk                          |
++--------------------------+-----------------------------+---------------------------+------------+---------+--------------+---------+-------------------------------+
+| 2. SLAB Allocator        | Yes (small sizes)           | Yes (internally)          | Yes        | Yes*    | ≤ PAGE_SIZE  | Fast    | Caches objects, uses pages    |
+|    kmalloc(), kzalloc()  |                             |                           |            |         |              |         | Internally uses alloc_pages() |
+|    kmem_cache_alloc()    |                             |                           |            |         |              |         |                               |
++--------------------------+-----------------------------+---------------------------+------------+---------+--------------+---------+-------------------------------+
+| 3. vmalloc               | Yes                         | No                        | Yes        | No      | > PAGE_SIZE  | Slow    | Mapped virtually, non-DMA     |
+|    vmalloc()             |                             |                           |            |         |              |         | usable                        |
++--------------------------+-----------------------------+---------------------------+------------+---------+--------------+---------+-------------------------------+
+| 4. Per-CPU Allocator     | No (per CPU)                | Yes                       | Yes        | No      | Small        | Fast    | CPU-local, avoid false sharing|
+|    DEFINE_PER_CPU()      |                             |                           |            |         |              |         |                               |
+|    per_cpu_ptr()         |                             |                           |            |         |              |         |                               |
++--------------------------+-----------------------------+---------------------------+------------+---------+--------------+---------+-------------------------------+
+| 5. Early Boot Allocator  | Yes                         | Yes                       | Yes        | Yes     | Boot-time    | N/A     | Used before MM init           |
+|    memblock_alloc()      |                             |                           |            |         |              |         |                               |
++--------------------------+-----------------------------+---------------------------+------------+---------+--------------+---------+-------------------------------+
+| 6. CMA (Contiguous MA)   | Yes                         | Yes                       | Yes        | Yes     | MBs          | Medium  | Uses reserved memory regions  |
+|    dma_alloc_from_...()  |                             |                           |            |         |              |         | for large DMA allocations     |
++--------------------------+-----------------------------+---------------------------+------------+---------+--------------+---------+-------------------------------+
+| 7. High Memory Mapping   | Yes (temporary mapping)     | Yes                       | Yes        | Yes     | Page         | Medium  | For highmem pages (32-bit)    |
+|    kmap_local_page()     |                             |                           |            |         |              |         | Only needed for highmem       |
+|    kmap_local_folio()    |                             |                           |            |         |              |         |                               |
++--------------------------+-----------------------------+---------------------------+------------+---------+--------------+---------+-------------------------------+

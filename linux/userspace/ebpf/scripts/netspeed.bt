@@ -1,0 +1,19 @@
+#!/usr/bin/env bpftrace
+
+tracepoint:net:net_dev_queue
+{
+    @tx_bytes += args->len;
+}
+
+tracepoint:net:netif_receive_skb
+{
+    @rx_bytes += args->len;
+}
+
+interval:s:1
+{
+    printf("TX: %d bytes/s, RX: %d bytes/s\n", @tx_bytes, @rx_bytes);
+    clear(@tx_bytes);
+    clear(@rx_bytes);
+}
+

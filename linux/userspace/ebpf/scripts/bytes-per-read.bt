@@ -1,0 +1,5 @@
+#!/usr/bin/env bpftrace
+
+// Shows read() syscall length distribution.
+
+tracepoint:syscalls:sys_exit_read { @ = hist(args->ret); }

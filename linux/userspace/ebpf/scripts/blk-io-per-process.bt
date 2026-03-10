@@ -1,0 +1,31 @@
+#!/usr/bin/env bpftrace
+
+tracepoint:block:block_rq_issue
+{
+    @start_ts[pid, tid] = nsecs;
+    @start_sector[pid, tid] = args->sector;
+}
+
+tracepoint:block:block_rq_complete
+/@start_ts[pid, tid]/
+{
+    $ts = @start_ts[pid, tid];
+    $sector = @start_sector[pid, tid];
+    $lat = nsecs - $ts;
+
+    $misalign = $sector % 8;
+    @lat_hist[comm, $misalign] = hist($lat / 1000);  // microseconds
+
+    delete(@start_ts[pid, tid]);
+    delete(@start_sector[pid, tid]);
+}
+
+// Comment
+BEGIN {
+    printf("Tracing block I/O latency vs. 4KB alignment... Hit Ctrl-C to stop.\n");
+}
+
+END {
+    clear(@start_ts);
+    clear(@start_sector);
+}

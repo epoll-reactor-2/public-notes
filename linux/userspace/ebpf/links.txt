@@ -1,0 +1,11 @@
+https://ebpf.io/what-is-ebpf/
+https://cilium.isovalent.com/hubfs/Learning-eBPF%20-%20Full%20book.pdf
+Continue from: BPF to BPF Calls (74/238)
+
+The BSD packet filter
+https://www.tcpdump.org/papers/bpf-usenix93.pdf
+Defines original BPF instruction set and core concepts.
+
+Different eBPF examples
+https://github.com/eunomia-bpf/bpf-developer-tutorial/tree/main
+https://github.com/eunomia-bpf/bpf-developer-tutorial/tree/main/src/42-xdp-loadbalancer
