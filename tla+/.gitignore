@@ -1,0 +1,13 @@
+*.toolbox
+*.pdf
+**/*.old
+**/Untitled
+**/states
+**/*.aux
+**/*.dvi
+**/*.log
+**/*.old
+**/*.pdf
+**/*.tex
+**/*.ps
+**/.tlacache

@@ -1,0 +1,17 @@
+@sudo bpftool prog dump xlated id 170
+-----------------
+  eBPF disassembly:
+int hello(void * ctx):
+; bpf_printk("Hello world %d", counter++);
+   0: (18) r1 = map[id:42][0]+0
+   2: (61) r3 = *(u32 *)(r1 +0)
+   3: (bc) w2 = w3
+   4: (04) w2 += 1
+   5: (63) *(u32 *)(r1 +0) = r2
+   6: (18) r1 = map[id:43][0]+0
+   8: (b4) w2 = 15
+   9: (85) call bpf_trace_printk#-114400
+; return XDP_PASS;
+  10: (b4) w0 = 2
+  11: (95) exit
+

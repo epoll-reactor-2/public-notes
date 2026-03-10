@@ -1,0 +1,56 @@
+В lua/config/lazy.lua:
+
+  require("tla").setup({
+    java_executable   = "/usr/lib/jvm/java-21-openjdk-amd64/bin/java",
+    java_opts         = { "-Xmx4g" },
+    tla2tools         = "/opt/tla/tla2tools.jar"
+  })
+
+В lua/plugins/tla.lua
+
+  return {
+    "susliko/tla.nvim",
+    dependencies = { "nvim-lua/plenary.nvim" },
+    config = function ()
+      require("tla").setup({
+        java_executable   = "/usr/lib/jvm/java-21-openjdk-amd64/bin/java",
+        java_opts         = { "-Xmx4g" },
+        tla2tools         = "/opt/tla/tla2tools.jar"
+      })
+    end
+  }
+
+Команда:
+  TlaCheck
+
+
+Команда TlaPdf:
+~/.local/share/nvim/lazy/tla.nvim/plugin/tla.vim
+  if exists('g:loaded_tla') | finish | endif
+  
+  let s:save_cpo = &cpo
+  set cpo&vim
+  
+  command! TlaInstall lua require'tla.install'.install_tla2tools()
+  command! TlaCheck lua require'tla'.check()
+  command! TlaTranslate lua require'tla'.translate()
+  
+  " New command to generate a PDF from the current TLA+ file
+  command! TlaPdf call s:tla_pdf()
+  
+  function! s:tla_pdf() abort
+    " Get full path of current buffer
+    let l:filename = expand('%:p')
+    " Build shell command
+    let l:cmd = '/usr/lib/jvm/java-21-openjdk-amd64/bin/java -Xmx4g -cp /opt/tla/tla2tools.jar tla2tex.TLA -shade ' . shellescape(l:filename) . ' && pdflatex ' . shellescape(expand('%:t:r') . '.tex')
+    " Run it
+    echo "Running: " . l:cmd
+    call system(l:cmd)
+    echo "PDF generated for " . l:filename
+  endfunction
+  
+  let &cpo = s:save_cpo
+  unlet s:save_cpo
+  
+  let g:loaded_tla = 1
+

@@ -1,0 +1,1 @@
+curl -L -C - -o tlaps-1.5.0-x86_64-linux-gnu-inst.bin https://github.com/tlaplus/tlapm/releases/download/202210041448/tlaps-1.5.0-x86_64-linux-gnu-inst.bin
